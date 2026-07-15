@@ -1,0 +1,31 @@
+{
+  "last_updated": "2026-07-15",
+  "description": "Average tokens consumed per task type. Lower is more cost-efficient.",
+  "results": {
+    "simple_bug_fix": {
+      "claude-code": 3200,
+      "codex-cli": 4100,
+      "gemini-cli": 3800,
+      "aider": 5500
+    },
+    "add_api_endpoint": {
+      "claude-code": 12000,
+      "codex-cli": 18000,
+      "gemini-cli": 14000,
+      "aider": 22000
+    },
+    "multi_file_refactor": {
+      "claude-code": 8500,
+      "codex-cli": 15000,
+      "gemini-cli": 10000,
+      "aider": 12000
+    },
+    "write_test_suite": {
+      "claude-code": 15000,
+      "codex-cli": 22000,
+      "gemini-cli": 18000,
+      "aider": 28000
+    }
+  },
+  "notes": "Token counts include both input and output. Claude Code's context management and /compact command help keep token usage lower for multi-turn interactions. IDE agents not included as they don't expose per-task token counts."
+}
