@@ -1,0 +1,48 @@
+{
+  "last_updated": "2026-07-15",
+  "description": "Time to complete standard tasks (seconds). Lower is better.",
+  "hardware": "MacBook Pro M3 Max, 64GB RAM",
+  "tasks": {
+    "simple_bug_fix": {
+      "description": "Fix a single-file type error",
+      "claude-code": 12,
+      "codex-cli": 18,
+      "gemini-cli": 15,
+      "cursor": 8,
+      "aider": 22
+    },
+    "add_api_endpoint": {
+      "description": "Add a new REST endpoint with validation",
+      "claude-code": 45,
+      "codex-cli": 65,
+      "gemini-cli": 50,
+      "cursor": 35,
+      "aider": 70
+    },
+    "multi_file_refactor": {
+      "description": "Rename a function across 8 files",
+      "claude-code": 30,
+      "codex-cli": 55,
+      "gemini-cli": 35,
+      "cursor": 40,
+      "aider": 45
+    },
+    "write_test_suite": {
+      "description": "Generate tests for a 200-line module",
+      "claude-code": 60,
+      "codex-cli": 80,
+      "gemini-cli": 55,
+      "cursor": 50,
+      "aider": 90
+    },
+    "implement_feature": {
+      "description": "Add auth middleware + tests + docs (3 files)",
+      "claude-code": 120,
+      "codex-cli": 180,
+      "gemini-cli": 140,
+      "cursor": 100,
+      "aider": 200
+    }
+  },
+  "notes": "IDE-based agents (Cursor) tend to be faster for simple tasks due to lower startup overhead. CLI agents excel at multi-file operations."
+}
