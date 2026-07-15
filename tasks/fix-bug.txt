@@ -1,0 +1,1 @@
+Fix the following bug: The user registration endpoint returns a 500 error when the email field contains a plus sign (e.g., user+test@example.com). The validation regex in src/validators/email.ts incorrectly rejects the plus character. Update the regex to accept valid RFC 5321 email addresses and add a test case for plus-sign emails.

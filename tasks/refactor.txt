@@ -1,0 +1,8 @@
+Refactor the user service module (src/services/user-service.ts). Currently it's a 450-line file that handles user CRUD, authentication, password reset, email verification, and profile management. Split it into focused modules:
+- src/services/user/crud.ts — create, read, update, delete operations
+- src/services/user/auth.ts — login, logout, token refresh
+- src/services/user/password.ts — password reset flow
+- src/services/user/verification.ts — email verification
+- src/services/user/index.ts — re-export all public functions
+
+Maintain all existing function signatures. Update all imports across the codebase. Ensure all existing tests still pass.
