@@ -1,0 +1,36 @@
+{
+  "last_updated": "2026-07-15",
+  "description": "Code generation quality by programming language (1-10 scale)",
+  "results": {
+    "python": {
+      "claude-code": 9.5, "codex-cli": 9.0, "gemini-cli": 9.2, "cursor": 9.0, "aider": 8.5
+    },
+    "typescript": {
+      "claude-code": 9.3, "codex-cli": 8.8, "gemini-cli": 9.0, "cursor": 9.0, "aider": 8.3
+    },
+    "javascript": {
+      "claude-code": 9.3, "codex-cli": 8.8, "gemini-cli": 9.0, "cursor": 9.0, "aider": 8.3
+    },
+    "rust": {
+      "claude-code": 8.8, "codex-cli": 8.0, "gemini-cli": 8.5, "cursor": 7.5, "aider": 7.8
+    },
+    "go": {
+      "claude-code": 9.0, "codex-cli": 8.5, "gemini-cli": 8.7, "cursor": 8.0, "aider": 8.0
+    },
+    "java": {
+      "claude-code": 8.8, "codex-cli": 8.5, "gemini-cli": 8.5, "cursor": 8.5, "aider": 8.0
+    },
+    "c_cpp": {
+      "claude-code": 8.5, "codex-cli": 8.0, "gemini-cli": 8.3, "cursor": 7.5, "aider": 7.5
+    },
+    "ruby": {
+      "claude-code": 8.8, "codex-cli": 8.0, "gemini-cli": 8.2, "cursor": 7.8, "aider": 7.8
+    },
+    "swift": {
+      "claude-code": 8.2, "codex-cli": 7.5, "gemini-cli": 8.0, "cursor": 7.8, "aider": 7.0
+    },
+    "sql": {
+      "claude-code": 9.0, "codex-cli": 8.5, "gemini-cli": 8.8, "cursor": 8.0, "aider": 8.0
+    }
+  }
+}
