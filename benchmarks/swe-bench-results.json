@@ -1,0 +1,41 @@
+{
+  "benchmark": "SWE-bench Verified",
+  "last_updated": "2026-07-15",
+  "results": [
+    {
+      "agent": "Claude Code",
+      "model": "claude-opus-4",
+      "score": 72.0,
+      "scaffolding": "agentic",
+      "source": "https://www.anthropic.com/research/swe-bench-sonnet"
+    },
+    {
+      "agent": "Codex CLI",
+      "model": "o3",
+      "score": 69.1,
+      "scaffolding": "agentic",
+      "source": "https://openai.com/index/codex"
+    },
+    {
+      "agent": "Gemini CLI",
+      "model": "gemini-2.5-pro",
+      "score": 63.8,
+      "scaffolding": "agentic",
+      "source": "https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025"
+    },
+    {
+      "agent": "Aider",
+      "model": "claude-opus-4",
+      "score": 72.0,
+      "scaffolding": "aider polyglot",
+      "source": "https://aider.chat/docs/leaderboards"
+    },
+    {
+      "agent": "Cursor",
+      "model": "agent-mode",
+      "score": 65.0,
+      "scaffolding": "cursor-agent",
+      "source": "community-estimated"
+    }
+  ]
+}

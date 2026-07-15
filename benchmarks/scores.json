@@ -1,0 +1,71 @@
+{
+  "last_updated": "2026-07-15",
+  "scale": "1-10",
+  "methodology": "Normalized scores based on SWE-bench, HumanEval, and structured manual evaluation",
+  "scores": {
+    "claude-code": {
+      "code_generation": 9.2,
+      "bug_fixing": 9.0,
+      "refactoring": 9.1,
+      "multi_file_changes": 9.3,
+      "test_writing": 8.8,
+      "overall": 9.1
+    },
+    "codex-cli": {
+      "code_generation": 8.5,
+      "bug_fixing": 8.3,
+      "refactoring": 8.0,
+      "multi_file_changes": 8.4,
+      "test_writing": 8.2,
+      "overall": 8.3
+    },
+    "gemini-cli": {
+      "code_generation": 9.0,
+      "bug_fixing": 8.7,
+      "refactoring": 8.5,
+      "multi_file_changes": 8.8,
+      "test_writing": 8.5,
+      "overall": 8.7
+    },
+    "cursor": {
+      "code_generation": 8.7,
+      "bug_fixing": 8.2,
+      "refactoring": 8.5,
+      "multi_file_changes": 8.0,
+      "test_writing": 8.0,
+      "overall": 8.3
+    },
+    "windsurf": {
+      "code_generation": 8.0,
+      "bug_fixing": 7.8,
+      "refactoring": 7.9,
+      "multi_file_changes": 7.7,
+      "test_writing": 7.6,
+      "overall": 7.8
+    },
+    "github-copilot": {
+      "code_generation": 8.3,
+      "bug_fixing": 7.9,
+      "refactoring": 7.8,
+      "multi_file_changes": 7.5,
+      "test_writing": 7.8,
+      "overall": 7.9
+    },
+    "aider": {
+      "code_generation": 8.0,
+      "bug_fixing": 8.1,
+      "refactoring": 8.2,
+      "multi_file_changes": 8.3,
+      "test_writing": 7.9,
+      "overall": 8.1
+    },
+    "continue": {
+      "code_generation": 7.5,
+      "bug_fixing": 7.2,
+      "refactoring": 7.3,
+      "multi_file_changes": 6.8,
+      "test_writing": 7.0,
+      "overall": 7.2
+    }
+  }
+}
