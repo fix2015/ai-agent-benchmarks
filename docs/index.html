@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent Benchmarks — Compare Claude Code, Codex, Gemini CLI, Cursor & More</title>
+<meta name="description" content="Comprehensive benchmarks and comparison of AI coding agents. Data-driven scores across code generation, bug fixing, refactoring, and more.">
+<meta property="og:title" content="AI Agent Benchmarks">
+<meta property="og:description" content="Compare 10 AI coding agents with real benchmark data">
+<meta property="og:type" content="website">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2129;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --purple: #bc8cff;
+    --orange: #f0883e;
+    --red: #f85149;
+    --yellow: #d29922;
+    --cyan: #39d2c0;
+    --pink: #f778ba;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 80px 0 60px;
+    background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+  }
+  .hero p { color: var(--text-muted); font-size: 1.25rem; max-width: 600px; margin: 0 auto 32px; }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-bottom: 32px;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .num { font-size: 2.5rem; font-weight: 800; color: var(--accent); }
+  .hero-stat .label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .btn {
+    display: inline-block;
+    padding: 12px 28px;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: opacity 0.2s;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn-secondary { background: var(--surface); border: 1px solid var(--border); margin-left: 12px; }
+
+  /* Sections */
+  section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .section-sub { text-align: center; color: var(--text-muted); margin-bottom: 40px; font-size: 1.05rem; }
+
+  /* Overall Scores Bar */
+  .score-bars { max-width: 700px; margin: 0 auto; }
+  .score-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+  .score-bar .name {
+    width: 140px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+  .score-bar .bar-bg {
+    flex: 1;
+    height: 32px;
+    background: var(--surface2);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .score-bar .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1s ease;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #fff;
+  }
+
+  /* Chart Grid */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 32px;
+  }
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .chart-card h3 { font-size: 1.1rem; margin-bottom: 16px; color: var(--text); }
+  .chart-card canvas { max-height: 300px; }
+
+  /* Comparison Table */
+  .table-wrapper { overflow-x: auto; margin-top: 24px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    background: var(--surface);
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+  }
+  tr:hover { background: var(--surface2); }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .badge-green { background: rgba(63,185,80,0.15); color: var(--green); }
+  .badge-red { background: rgba(248,81,73,0.15); color: var(--red); }
+  .badge-yellow { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .badge-blue { background: rgba(88,166,255,0.15); color: var(--accent); }
+
+  /* Pricing Cards */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 32px;
+  }
+  .pricing-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .pricing-card:hover { border-color: var(--accent); }
+  .pricing-card .agent-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+  .pricing-card .vendor { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px; }
+  .pricing-card .price { font-size: 2rem; font-weight: 800; color: var(--accent); }
+  .pricing-card .price-label { color: var(--text-muted); font-size: 0.8rem; }
+  .pricing-card .features { list-style: none; margin-top: 16px; text-align: left; }
+  .pricing-card .features li { padding: 4px 0; font-size: 0.85rem; color: var(--text-muted); }
+  .pricing-card .features li::before { content: "✓ "; color: var(--green); }
+
+  /* Footer */
+  footer {
+    padding: 40px 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2rem; }
+    .hero-stats { gap: 24px; }
+    .hero-stat .num { font-size: 1.8rem; }
+    .chart-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr 1fr; }
+    .score-bar .name { width: 100px; font-size: 0.8rem; }
+  }
+  @media (max-width: 480px) {
+    .pricing-grid { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="container">
+    <h1>AI Agent Benchmarks</h1>
+    <p>Data-driven comparison of 10 AI coding agents. Real benchmarks, real scores, updated for mid-2026.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">10</div><div class="label">Agents</div></div>
+      <div class="hero-stat"><div class="num">9</div><div class="label">Benchmarks</div></div>
+      <div class="hero-stat"><div class="num">10</div><div class="label">Languages</div></div>
+      <div class="hero-stat"><div class="num">5</div><div class="label">Task Types</div></div>
+    </div>
+    <a href="https://github.com/fix2015/ai-agent-benchmarks" class="btn">View on GitHub</a>
+    <a href="#comparison" class="btn btn-secondary">See Comparison</a>
+  </div>
+</div>
+
+<!-- Overall Scores -->
+<section>
+  <div class="container">
+    <h2>Overall Benchmark Scores</h2>
+    <p class="section-sub">Normalized 1-10 scale across code generation, bug fixing, refactoring, multi-file changes, and test writing</p>
+    <div class="score-bars" id="scoreBars"></div>
+  </div>
+</section>
+
+<!-- Charts -->
+<section>
+  <div class="container">
+    <h2>Detailed Breakdown</h2>
+    <p class="section-sub">Performance across different categories and dimensions</p>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Category Scores (Top 5 Agents)</h3>
+        <canvas id="radarChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Task Completion Speed (seconds)</h3>
+        <canvas id="speedChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Context Window Scaling</h3>
+        <canvas id="contextChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Language Support Quality</h3>
+        <canvas id="languageChart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Feature Comparison -->
+<section id="comparison">
+  <div class="container">
+    <h2>Feature Comparison</h2>
+    <p class="section-sub">Side-by-side capabilities of all agents</p>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Agent</th>
+            <th>Interface</th>
+            <th>Context</th>
+            <th>MCP</th>
+            <th>Multi-file</th>
+            <th>Open Source</th>
+            <th>Background</th>
+            <th>Image Input</th>
+            <th>Web Search</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Claude Code</strong></td><td>CLI</td><td>200K</td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td></tr>
+          <tr><td><strong>Codex CLI</strong></td><td>CLI</td><td>200K</td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-red">No</span></td></tr>
+          <tr><td><strong>Gemini CLI</strong></td><td>CLI</td><td>1M</td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td></tr>
+          <tr><td><strong>Cursor</strong></td><td>IDE</td><td>Varies</td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td></tr>
+          <tr><td><strong>Windsurf</strong></td><td>IDE</td><td>Varies</td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td></tr>
+          <tr><td><strong>GitHub Copilot</strong></td><td>IDE + CLI</td><td>Varies</td><td><span class="badge badge-yellow">Limited</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td></tr>
+          <tr><td><strong>Aider</strong></td><td>CLI</td><td>Varies</td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-red">No</span></td></tr>
+          <tr><td><strong>Continue</strong></td><td>IDE ext</td><td>Varies</td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-red">No</span></td></tr>
+          <tr><td><strong>OpenCode</strong></td><td>CLI</td><td>200K</td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td></tr>
+          <tr><td><strong>Qwen Code</strong></td><td>CLI</td><td>128K</td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-red">No</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section>
+  <div class="container">
+    <h2>Pricing</h2>
+    <p class="section-sub">Estimated monthly cost for heavy usage</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="agent-name">Claude Code</div>
+        <div class="vendor">Anthropic</div>
+        <div class="price">$50-150</div>
+        <div class="price-label">per month (usage-based)</div>
+        <ul class="features">
+          <li>API pay-per-token</li>
+          <li>Included with Pro ($20/mo)</li>
+          <li>Team plan available</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="agent-name">Gemini CLI</div>
+        <div class="vendor">Google</div>
+        <div class="price" style="color:var(--green)">Free</div>
+        <div class="price-label">generous free tier</div>
+        <ul class="features">
+          <li>Free tier included</li>
+          <li>1M token context</li>
+          <li>API for higher usage</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="agent-name">Cursor</div>
+        <div class="vendor">Anysphere</div>
+        <div class="price">$20</div>
+        <div class="price-label">per month (Pro)</div>
+        <ul class="features">
+          <li>Free tier available</li>
+          <li>500 fast requests/mo</li>
+          <li>Business: $40/mo</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="agent-name">GitHub Copilot</div>
+        <div class="vendor">GitHub</div>
+        <div class="price">$10</div>
+        <div class="price-label">per month (Individual)</div>
+        <ul class="features">
+          <li>Free tier (2K/mo)</li>
+          <li>Business: $19/mo</li>
+          <li>Enterprise: $39/mo</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="agent-name">Windsurf</div>
+        <div class="vendor">Codeium</div>
+        <div class="price">$15</div>
+        <div class="price-label">per month (Pro)</div>
+        <ul class="features">
+          <li>Free tier included</li>
+          <li>Unlimited Cascade</li>
+          <li>Premium models</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="agent-name">Aider</div>
+        <div class="vendor">Open Source</div>
+        <div class="price" style="color:var(--green)">Free</div>
+        <div class="price-label">bring your own API key</div>
+        <ul class="features">
+          <li>Tool is 100% free</li>
+          <li>Any LLM provider</li>
+          <li>Pay only API costs</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="agent-name">Codex CLI</div>
+        <div class="vendor">OpenAI</div>
+        <div class="price">$50-200</div>
+        <div class="price-label">per month (usage-based)</div>
+        <ul class="features">
+          <li>API pay-per-token</li>
+          <li>ChatGPT Pro: $200/mo</li>
+          <li>Sandboxed execution</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="agent-name">Continue</div>
+        <div class="vendor">Open Source</div>
+        <div class="price" style="color:var(--green)">Free</div>
+        <div class="price-label">fully free with local models</div>
+        <ul class="features">
+          <li>100% open source</li>
+          <li>Run locally with Ollama</li>
+          <li>Zero cost possible</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SWE-bench -->
+<section>
+  <div class="container">
+    <h2>SWE-bench Verified Scores</h2>
+    <p class="section-sub">Industry-standard benchmark for real-world software engineering tasks</p>
+    <div class="score-bars" id="swebenchBars"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:linear-gradient(135deg, rgba(88,166,255,0.1), rgba(188,140,255,0.1)); border:none;">
+  <div class="container" style="text-align:center;">
+    <h2>Open Source & Community-Driven</h2>
+    <p class="section-sub">All data is structured JSON. Run your own benchmarks, submit corrections, add new agents.</p>
+    <a href="https://github.com/fix2015/ai-agent-benchmarks" class="btn">Star on GitHub</a>
+    <a href="https://github.com/fix2015/ai-agent-benchmarks/blob/main/CONTRIBUTING.md" class="btn btn-secondary">Contribute</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Built by <a href="https://github.com/fix2015">fix2015</a> · Data updated July 2026 · <a href="https://github.com/fix2015/ai-agent-benchmarks">GitHub</a></p>
+  </div>
+</footer>
+
+<script>
+const colors = {
+  claude: '#bc8cff',
+  codex: '#3fb950',
+  gemini: '#58a6ff',
+  cursor: '#f0883e',
+  aider: '#f778ba',
+  windsurf: '#39d2c0',
+  copilot: '#d29922',
+  cont: '#8b949e'
+};
+
+// Overall Score Bars
+const scores = [
+  { name: 'Claude Code', score: 9.1, color: colors.claude },
+  { name: 'Gemini CLI', score: 8.7, color: colors.gemini },
+  { name: 'Codex CLI', score: 8.3, color: colors.codex },
+  { name: 'Cursor', score: 8.3, color: colors.cursor },
+  { name: 'Aider', score: 8.1, color: colors.aider },
+  { name: 'GitHub Copilot', score: 7.9, color: colors.copilot },
+  { name: 'Windsurf', score: 7.8, color: colors.windsurf },
+  { name: 'Continue', score: 7.2, color: colors.cont }
+];
+const barsEl = document.getElementById('scoreBars');
+scores.forEach(s => {
+  const pct = (s.score / 10 * 100).toFixed(0);
+  barsEl.innerHTML += `<div class="score-bar">
+    <div class="name">${s.name}</div>
+    <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${s.color}">${s.score}</div></div>
+  </div>`;
+});
+
+// SWE-bench Bars
+const sweBench = [
+  { name: 'Claude Code', score: 72.0, color: colors.claude },
+  { name: 'Aider', score: 72.0, color: colors.aider },
+  { name: 'Codex CLI', score: 69.1, color: colors.codex },
+  { name: 'Cursor', score: 65.0, color: colors.cursor },
+  { name: 'Gemini CLI', score: 63.8, color: colors.gemini }
+];
+const swEl = document.getElementById('swebenchBars');
+sweBench.forEach(s => {
+  swEl.innerHTML += `<div class="score-bar">
+    <div class="name">${s.name}</div>
+    <div class="bar-bg"><div class="bar-fill" style="width:${s.score}%;background:${s.color}">${s.score}%</div></div>
+  </div>`;
+});
+
+// Radar Chart
+const radarCtx = document.getElementById('radarChart').getContext('2d');
+new Chart(radarCtx, {
+  type: 'radar',
+  data: {
+    labels: ['Code Gen', 'Bug Fix', 'Refactor', 'Multi-file', 'Tests'],
+    datasets: [
+      { label: 'Claude Code', data: [9.2,9.0,9.1,9.3,8.8], borderColor: colors.claude, backgroundColor: colors.claude+'20', pointBackgroundColor: colors.claude },
+      { label: 'Gemini CLI', data: [9.0,8.7,8.5,8.8,8.5], borderColor: colors.gemini, backgroundColor: colors.gemini+'20', pointBackgroundColor: colors.gemini },
+      { label: 'Codex CLI', data: [8.5,8.3,8.0,8.4,8.2], borderColor: colors.codex, backgroundColor: colors.codex+'20', pointBackgroundColor: colors.codex },
+      { label: 'Cursor', data: [8.7,8.2,8.5,8.0,8.0], borderColor: colors.cursor, backgroundColor: colors.cursor+'20', pointBackgroundColor: colors.cursor },
+      { label: 'Aider', data: [8.0,8.1,8.2,8.3,7.9], borderColor: colors.aider, backgroundColor: colors.aider+'20', pointBackgroundColor: colors.aider }
+    ]
+  },
+  options: {
+    scales: { r: { min: 6, max: 10, ticks: { stepSize: 1, color: '#8b949e' }, grid: { color: '#30363d' }, pointLabels: { color: '#e6edf3', font: { size: 12 } } } },
+    plugins: { legend: { labels: { color: '#e6edf3', usePointStyle: true, padding: 16 } } }
+  }
+});
+
+// Speed Chart
+const speedCtx = document.getElementById('speedChart').getContext('2d');
+new Chart(speedCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Bug Fix', 'API Endpoint', 'Refactor', 'Test Suite', 'Full Feature'],
+    datasets: [
+      { label: 'Claude Code', data: [12,45,30,60,120], backgroundColor: colors.claude },
+      { label: 'Gemini CLI', data: [15,50,35,55,140], backgroundColor: colors.gemini },
+      { label: 'Cursor', data: [8,35,40,50,100], backgroundColor: colors.cursor },
+      { label: 'Codex CLI', data: [18,65,55,80,180], backgroundColor: colors.codex },
+      { label: 'Aider', data: [22,70,45,90,200], backgroundColor: colors.aider }
+    ]
+  },
+  options: {
+    scales: { x: { ticks: { color: '#8b949e' }, grid: { color: '#30363d' } }, y: { ticks: { color: '#8b949e' }, grid: { color: '#30363d' }, title: { display: true, text: 'Seconds', color: '#8b949e' } } },
+    plugins: { legend: { labels: { color: '#e6edf3', usePointStyle: true, padding: 12 } } }
+  }
+});
+
+// Context Window Chart
+const ctxChart = document.getElementById('contextChart').getContext('2d');
+new Chart(ctxChart, {
+  type: 'line',
+  data: {
+    labels: ['Small (2K)', 'Medium (15K)', 'Large (75K)', 'XL (250K)'],
+    datasets: [
+      { label: 'Claude Code', data: [9.5,9.3,9.0,8.5], borderColor: colors.claude, backgroundColor: colors.claude+'40', tension: 0.3, fill: false },
+      { label: 'Gemini CLI', data: [9.2,9.0,8.8,8.8], borderColor: colors.gemini, backgroundColor: colors.gemini+'40', tension: 0.3, fill: false },
+      { label: 'Codex CLI', data: [9.0,8.5,7.8,7.0], borderColor: colors.codex, backgroundColor: colors.codex+'40', tension: 0.3, fill: false },
+      { label: 'Cursor', data: [9.0,8.5,7.5,6.5], borderColor: colors.cursor, backgroundColor: colors.cursor+'40', tension: 0.3, fill: false },
+      { label: 'Aider', data: [8.8,8.3,7.8,7.5], borderColor: colors.aider, backgroundColor: colors.aider+'40', tension: 0.3, fill: false }
+    ]
+  },
+  options: {
+    scales: { x: { ticks: { color: '#8b949e' }, grid: { color: '#30363d' } }, y: { min: 6, max: 10, ticks: { color: '#8b949e' }, grid: { color: '#30363d' }, title: { display: true, text: 'Score', color: '#8b949e' } } },
+    plugins: { legend: { labels: { color: '#e6edf3', usePointStyle: true, padding: 12 } } }
+  }
+});
+
+// Language Chart
+const langCtx = document.getElementById('languageChart').getContext('2d');
+new Chart(langCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Python', 'TypeScript', 'Rust', 'Go', 'Java', 'C/C++', 'SQL'],
+    datasets: [
+      { label: 'Claude Code', data: [9.5,9.3,8.8,9.0,8.8,8.5,9.0], backgroundColor: colors.claude },
+      { label: 'Gemini CLI', data: [9.2,9.0,8.5,8.7,8.5,8.3,8.8], backgroundColor: colors.gemini },
+      { label: 'Codex CLI', data: [9.0,8.8,8.0,8.5,8.5,8.0,8.5], backgroundColor: colors.codex }
+    ]
+  },
+  options: {
+    indexAxis: 'y',
+    scales: { x: { min: 6, max: 10, ticks: { color: '#8b949e' }, grid: { color: '#30363d' } }, y: { ticks: { color: '#8b949e' }, grid: { color: '#30363d' } } },
+    plugins: { legend: { labels: { color: '#e6edf3', usePointStyle: true, padding: 12 } } }
+  }
+});
+</script>
+</body>
+</html>
