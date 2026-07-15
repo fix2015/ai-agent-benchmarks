@@ -1,0 +1,80 @@
+{
+  "last_updated": "2026-07-15",
+  "currency": "USD",
+  "pricing": {
+    "claude-code": {
+      "model": "usage-based",
+      "free_tier": false,
+      "plans": [
+        { "name": "API", "price_monthly": null, "notes": "Pay per token via Anthropic API" },
+        { "name": "Claude Pro", "price_monthly": 20, "notes": "Included with Claude Pro subscription, usage limits apply" },
+        { "name": "Claude Team", "price_monthly": 30, "notes": "Per seat, higher usage limits" }
+      ],
+      "estimated_monthly_cost_heavy_use": "50-150"
+    },
+    "codex-cli": {
+      "model": "usage-based",
+      "free_tier": false,
+      "plans": [
+        { "name": "API", "price_monthly": null, "notes": "Pay per token via OpenAI API" },
+        { "name": "ChatGPT Pro", "price_monthly": 200, "notes": "Unlimited access included" }
+      ],
+      "estimated_monthly_cost_heavy_use": "50-200"
+    },
+    "gemini-cli": {
+      "model": "freemium",
+      "free_tier": true,
+      "plans": [
+        { "name": "Free", "price_monthly": 0, "notes": "Generous free tier with Gemini 2.5 Pro" },
+        { "name": "API", "price_monthly": null, "notes": "Pay per token for higher usage" }
+      ],
+      "estimated_monthly_cost_heavy_use": "0-50"
+    },
+    "cursor": {
+      "model": "subscription",
+      "free_tier": true,
+      "plans": [
+        { "name": "Free", "price_monthly": 0, "notes": "Limited completions" },
+        { "name": "Pro", "price_monthly": 20, "notes": "500 fast requests/month" },
+        { "name": "Business", "price_monthly": 40, "notes": "Team features, admin controls" }
+      ],
+      "estimated_monthly_cost_heavy_use": "20-40"
+    },
+    "windsurf": {
+      "model": "freemium",
+      "free_tier": true,
+      "plans": [
+        { "name": "Free", "price_monthly": 0, "notes": "Limited Cascade credits" },
+        { "name": "Pro", "price_monthly": 15, "notes": "Unlimited Cascade" }
+      ],
+      "estimated_monthly_cost_heavy_use": "15"
+    },
+    "github-copilot": {
+      "model": "subscription",
+      "free_tier": true,
+      "plans": [
+        { "name": "Free", "price_monthly": 0, "notes": "2000 completions/month" },
+        { "name": "Individual", "price_monthly": 10, "notes": "Unlimited completions" },
+        { "name": "Business", "price_monthly": 19, "notes": "Organization features" },
+        { "name": "Enterprise", "price_monthly": 39, "notes": "Fine-tuning, compliance" }
+      ],
+      "estimated_monthly_cost_heavy_use": "10-19"
+    },
+    "aider": {
+      "model": "byok",
+      "free_tier": true,
+      "plans": [
+        { "name": "Free (BYOK)", "price_monthly": 0, "notes": "Tool is free, pay your LLM provider" }
+      ],
+      "estimated_monthly_cost_heavy_use": "30-100"
+    },
+    "continue": {
+      "model": "byok",
+      "free_tier": true,
+      "plans": [
+        { "name": "Free (BYOK)", "price_monthly": 0, "notes": "Fully free with local models" }
+      ],
+      "estimated_monthly_cost_heavy_use": "0-100"
+    }
+  }
+}
