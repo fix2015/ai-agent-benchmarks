@@ -1,0 +1,19 @@
+{
+  "last_updated": "2026-07-15",
+  "description": "How agents perform as codebase size increases",
+  "methodology": "Each agent given the same task across repos of increasing size. Score measures correctness of output.",
+  "repo_sizes": {
+    "small": { "files": 15, "lines": 2000, "description": "Simple CLI tool" },
+    "medium": { "files": 80, "lines": 15000, "description": "Express.js API with auth" },
+    "large": { "files": 350, "lines": 75000, "description": "Next.js SaaS application" },
+    "xlarge": { "files": 1200, "lines": 250000, "description": "Monorepo with 5 packages" }
+  },
+  "results": {
+    "claude-code": { "small": 9.5, "medium": 9.3, "large": 9.0, "xlarge": 8.5 },
+    "codex-cli": { "small": 9.0, "medium": 8.5, "large": 7.8, "xlarge": 7.0 },
+    "gemini-cli": { "small": 9.2, "medium": 9.0, "large": 8.8, "xlarge": 8.8 },
+    "cursor": { "small": 9.0, "medium": 8.5, "large": 7.5, "xlarge": 6.5 },
+    "aider": { "small": 8.8, "medium": 8.3, "large": 7.8, "xlarge": 7.5 }
+  },
+  "notes": "Gemini CLI benefits significantly from 1M token context at xlarge sizes. Claude Code uses intelligent context management to maintain performance despite smaller window."
+}
